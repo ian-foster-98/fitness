@@ -15,7 +15,7 @@ namespace Workouts
 
         public int Reps { get; set; }
         
-        public string Weight { get; set; }
+        public double Weight { get; set; }
 
         public bool Success { get; set; }
     }

@@ -1,7 +1,11 @@
+using System.Collections.Generic;
+
 namespace Workouts
 {
     public interface IExerciseDataLayer
     {
-        List<Exercise> GetPreviousExercises(string ExerciseName);
+        IList<Exercise> GetPreviousExercises(string ExerciseName);
+
+        void UpdateExercise(Exercise exercise);
     }
 }
