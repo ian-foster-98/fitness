@@ -14,12 +14,13 @@ namespace Workouts
             this.context = context;
         }
 
-        IList<Exercise> IExerciseDataLayer.GetPreviousExercises(string ExerciseName)
+        public IList<Exercise> GetPreviousExercises(string ExerciseName)
         {
+            // Validate incoming data.
             throw new NotImplementedException();
         }
 
-        void IExerciseDataLayer.UpdateExercise(Exercise exercise)
+        public void UpdateExercise(Exercise exercise)
         {
             throw new NotImplementedException();
         }
