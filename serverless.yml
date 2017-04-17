@@ -1,0 +1,25 @@
+service: aws-csharp # NOTE: update this with your service name
+
+provider:
+  name: aws
+  runtime: dotnetcore1.0
+
+package:
+  artifact: bin/release/netcoreapp1.0/publish/deploy-package.zip
+
+functions:
+  getnewworkout:
+    handler: CsharpHandlers::Workouts.WorkoutServices::GetNewWorkout
+    events:
+      - http:
+          path: workouts
+          method: get
+          cors: true
+  updateworkout:
+    handler: CsharpHandlers::Workouts.WorkoutServices::UpdateWorkout
+    events:
+      - http:
+          path: workouts
+          method: post
+          cors: true
+
