@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 
 using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
@@ -12,17 +9,10 @@ namespace Workouts
     public class WorkoutServices
     {
         /// <summary>
-        /// Default constructor that Lambda will invoke.
-        /// </summary>
-        public WorkoutServices()
-        {
-        }
-
-        /// <summary>
-        /// A Lambda function to respond to HTTP Get methods from API Gateway
+        /// Returns a new workout based on the previous recorded workout data.
         /// </summary>
         /// <param name="request"></param>
-        /// <returns>The list of blogs</returns>
+        /// <returns>A new workout definition.</returns>
         public APIGatewayProxyResponse GetNewWorkout(APIGatewayProxyRequest request, ILambdaContext context)
         {
             context.Logger.LogLine("GetNewWorkout Request\n");
@@ -38,10 +28,10 @@ namespace Workouts
         }
 
         /// <summary>
-        /// A Lambda function to respond to HTTP Get methods from API Gateway
+        /// Update an existing workout with new information about the exercise performed.
         /// </summary>
         /// <param name="request"></param>
-        /// <returns>The list of blogs</returns>
+        /// <returns>HTTP code indicating status of request.</returns>
         public APIGatewayProxyResponse UpdateWorkout(APIGatewayProxyRequest request, ILambdaContext context)
         {
             context.Logger.LogLine("Get Request\n");
