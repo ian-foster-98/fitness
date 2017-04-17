@@ -9,6 +9,7 @@ namespace Workouts
 
         public ExerciseDataLayerTests()
         {
+            // TODO: Mock out DynamoDB client.
             this.dataLayer = new ExerciseDataLayer(null);
         }
 

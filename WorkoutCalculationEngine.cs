@@ -21,12 +21,12 @@ namespace Workouts
             this.dataLayer = dataLayer;
         }
 
-        List<string> IWorkoutCalculationEngine.GetExerciseNames()
+        public List<string> GetExerciseNames()
         {
-            throw new NotImplementedException();
+            return exercisesForWorkout;
         }
 
-        List<Exercise> IWorkoutCalculationEngine.GetNewWorkout()
+        public List<Exercise> GetNewWorkout()
         {
             throw new NotImplementedException();
         }
