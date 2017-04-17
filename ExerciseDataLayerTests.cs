@@ -1,4 +1,3 @@
-using System;
 using Xunit;
 
 namespace Workouts.Tests
@@ -8,7 +7,7 @@ namespace Workouts.Tests
         [Fact]
         public void Test1()
         {
-
+            Assert.False(true);
         }
     }
 }
