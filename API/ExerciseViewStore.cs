@@ -1,26 +1,24 @@
 using System;
-using System.Collections.Generic;
 using Amazon.DynamoDBv2.DataModel;
 
-namespace Workouts
+namespace Workouts.API
 {
-    public class ExerciseDataLayer : IExerciseDataLayer
+    public class ExerciseViewStore : IExerciseViewStore
     {
         // Reference to the data storage layer.
         private DynamoDBContext context;
 
-        public ExerciseDataLayer(DynamoDBContext context)
+        public ExerciseViewStore(DynamoDBContext context)
         {
             this.context = context;
         }
 
-        public IList<Exercise> GetPreviousExercises(string ExerciseName)
+        public void SetNextWeight(string exerciseName, double weight)
         {
-            // Validate incoming data.
             throw new NotImplementedException();
         }
 
-        public void UpdateExercise(Exercise exercise)
+        public double GetNextWeight(string exerciseName)
         {
             throw new NotImplementedException();
         }

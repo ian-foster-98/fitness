@@ -1,4 +1,4 @@
-service: aws-csharp # NOTE: update this with your service name
+service: workouts
 
 provider:
   name: aws

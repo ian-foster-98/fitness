@@ -1,6 +1,6 @@
 using Amazon.DynamoDBv2.DataModel;
 
-namespace Workouts
+namespace Workouts.API
 {
     [DynamoDBTable("Exercise")]
     public class Exercise
@@ -11,10 +11,6 @@ namespace Workouts
         [DynamoDBRangeKey]
         public string ExerciseName{ get; set; }
 
-        public int Sets { get; set; }
-
-        public int Reps { get; set; }
-        
         public double Weight { get; set; }
 
         public bool Success { get; set; }

@@ -4,23 +4,23 @@ using System.Net;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
 
-namespace Workouts
+namespace Workouts.API
 {
-    public class WorkoutServices
+    public class Workouts
     {
         /// <summary>
         /// Returns a new workout based on the previous recorded workout data.
         /// </summary>
         /// <param name="request"></param>
         /// <returns>A new workout definition.</returns>
-        public APIGatewayProxyResponse GetNewWorkout(APIGatewayProxyRequest request, ILambdaContext context)
+        public APIGatewayProxyResponse GetNextWorkout(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            context.Logger.LogLine("GetNewWorkout Request\n");
+            context.Logger.LogLine("GetNextWorkout Request\n");
 
             var response = new APIGatewayProxyResponse
             {
                 StatusCode = (int)HttpStatusCode.OK,
-                Body = "Called GetNewWorkout",
+                Body = "Called GetNextWorkout",
                 Headers = new Dictionary<string, string> { { "Content-Type", "text/plain" } }
             };
 
@@ -32,7 +32,7 @@ namespace Workouts
         /// </summary>
         /// <param name="request"></param>
         /// <returns>HTTP code indicating status of request.</returns>
-        public APIGatewayProxyResponse UpdateWorkout(APIGatewayProxyRequest request, ILambdaContext context)
+        public APIGatewayProxyResponse SaveExercise(APIGatewayProxyRequest request, ILambdaContext context)
         {
             context.Logger.LogLine("Get Request\n");
 
