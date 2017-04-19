@@ -41,5 +41,44 @@ namespace Workouts.API.Tests
                 }
             ));
         }
+
+        [Fact]
+        public void TestInvalidDate()
+        {
+            Assert.Throws<ArgumentException>(() => this.workoutServices.SaveExercise(
+                new Exercise() {
+                    ExerciseName =  "Back Squat",
+                    DateOfExercise = DateTime.Now.Date.AddDays(1).ToString(),
+                    Weight = 10,
+                    Success = true
+                }
+            ));
+        }
+
+        [Fact]
+        public void TestInvalidWeight()
+        {
+            Assert.Throws<ArgumentException>(() => this.workoutServices.SaveExercise(
+                new Exercise() {
+                    ExerciseName =  "Back Squat",
+                    DateOfExercise = DateTime.Now.Date.ToString(),
+                    Weight = -1,
+                    Success = true
+                }
+            ));
+        }
+
+        [Fact]
+        public void TestNonsenseDate()
+        {
+            Assert.Throws<FormatException>(() => this.workoutServices.SaveExercise(
+                new Exercise() {
+                    ExerciseName =  "Back Squat",
+                    DateOfExercise = "Nonsense Date Value",
+                    Weight = -1,
+                    Success = true
+                }
+            ));
+        }
     }
 }
