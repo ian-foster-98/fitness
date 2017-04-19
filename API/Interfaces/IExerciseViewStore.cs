@@ -1,4 +1,4 @@
-namespace Workouts.API
+namespace Workouts.API.Interfaces
 {
     public interface IExerciseViewStore
     {

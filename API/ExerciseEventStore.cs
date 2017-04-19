@@ -1,21 +1,23 @@
 using System;
 using System.Collections.Generic;
 using Amazon.DynamoDBv2.DataModel;
+using Workouts.API.Interfaces;
 
 namespace Workouts.API
 {
     public class ExerciseEventStore : IExerciseEventStore
     {
         // Reference to the data storage layer.
-        private DynamoDBContext context;
+        private IDynamoDBContext context;
 
-        public ExerciseEventStore(DynamoDBContext context)
+        public ExerciseEventStore(IDynamoDBContext context)
         {
             this.context = context;
         }
 
         public IList<Exercise> FindExerciseEventsByName(string ExerciseName)
         {
+            // Check name is valid.
             throw new NotImplementedException();
         }
 

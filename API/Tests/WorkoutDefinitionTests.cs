@@ -1,7 +1,9 @@
 using System;
 using Xunit;
+using Workouts.API.Exceptions;
+using Workouts.API.Interfaces;
 
-namespace Workouts.API
+namespace Workouts.API.Tests
 {
     public class WorkoutDefinitionTests
     {
@@ -9,7 +11,6 @@ namespace Workouts.API
 
         public WorkoutDefinitionTests()
         {
-            // TODO: Mock out DynamoDB client.
             this.workoutDefinition = new WorkoutDefinition();
         }
 

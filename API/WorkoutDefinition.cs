@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Workouts.API.Interfaces;
 
 namespace Workouts.API 
 {

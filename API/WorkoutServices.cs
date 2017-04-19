@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Workouts.API.Interfaces;
 
 namespace Workouts.API
 {
@@ -26,7 +27,7 @@ namespace Workouts.API
 
         public void SaveExercise(Exercise exercise)
         {
-            // Verify exerice name is valid.
+            // Verify exercise name is valid.
 
             // Verify date is valid.
 

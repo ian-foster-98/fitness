@@ -1,14 +1,15 @@
 using System;
 using Amazon.DynamoDBv2.DataModel;
+using Workouts.API.Interfaces;
 
 namespace Workouts.API
 {
     public class ExerciseViewStore : IExerciseViewStore
     {
         // Reference to the data storage layer.
-        private DynamoDBContext context;
+        private IDynamoDBContext context;
 
-        public ExerciseViewStore(DynamoDBContext context)
+        public ExerciseViewStore(IDynamoDBContext context)
         {
             this.context = context;
         }

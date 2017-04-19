@@ -1,7 +1,10 @@
 using System;
+using Amazon.DynamoDBv2.DataModel;
+using Moq;
 using Xunit;
+using Workouts.API.Interfaces;
 
-namespace Workouts.API
+namespace Workouts.API.Tests
 {
     public class ExerciseEventStoreTests
     {
@@ -9,14 +12,12 @@ namespace Workouts.API
 
         public ExerciseEventStoreTests()
         {
-            // TODO: Mock out DynamoDB client.
-            this.dataLayer = new ExerciseEventStore(null);
+            var dbContext = SetUpDBContext();
+            this.dataLayer = new ExerciseEventStore(dbContext);
         }
 
-        [Fact]
-        public void TestInvalidExerciseName()
-        {
-            Assert.Throws<ArgumentException>(() => this.dataLayer.FindExerciseEventsByName("Non-existant exercise name."));
+        private IDynamoDBContext SetUpDBContext(){
+            return null;
         }
 
         [Fact]
