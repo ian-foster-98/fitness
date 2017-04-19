@@ -6,6 +6,6 @@ namespace Workouts.API
     {
         List<string> GetWorkoutDefinition();
 
-        double GetNextWeight(double weight);
+        double GetNextWeight(string exerciseName, double weight);
     }
 }

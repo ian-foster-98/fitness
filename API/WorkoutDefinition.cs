@@ -1,31 +1,29 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Workouts.API 
 {
     public class WorkoutDefinition : IWorkoutDefinition
     {
-        enum WeightCategory { Twos, Fives };
-
-        private Dictionary<string, WeightCategory> exerciseNames = new Dictionary<string, WeightCategory>
+        private List<string> exerciseNames = new List<string>
         {
-            { "Back Squat", WeightCategory.Twos },
-            { "Bench Press", WeightCategory.Twos },
-            { "Deadlift", WeightCategory.Twos },
-            { "Bench Dips", WeightCategory.Twos },
-            { "Lateral Pull-downs", WeightCategory.Fives },
-            { "Shoulder Press", WeightCategory.Twos },
-            { "Lunges", WeightCategory.Fives }
+            "Back Squat",
+            "Bench Press",
+            "Deadlift",
+            "Bench Dips",
+            "Lateral Pull-downs",
+            "Shoulder Press",
+            "Lunges"
         };
 
         public List<string> GetWorkoutDefinition()
         {
-            return this.exerciseNames.Keys.ToList();
+            return this.exerciseNames;
         }
 
-        public double GetNextWeight(double weight)
+        public double GetNextWeight(string exerciseName, double weight)
         {
+            // Validate inputs.
             throw new NotImplementedException();
         }
     }
