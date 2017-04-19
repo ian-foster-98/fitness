@@ -8,15 +8,15 @@ package:
   artifact: bin/release/netcoreapp1.0/publish/deploy-package.zip
 
 functions:
-  getnewworkout:
-    handler: CsharpHandlers::Workouts.WorkoutServices::GetNewWorkout
+  getnextworkout:
+    handler: CsharpHandlers::Workouts.Workouts::GetNextWorkout
     events:
       - http:
           path: workouts
           method: get
           cors: true
-  updateworkout:
-    handler: CsharpHandlers::Workouts.WorkoutServices::UpdateWorkout
+  saveexercise:
+    handler: CsharpHandlers::Workouts.Workouts::SaveExercise
     events:
       - http:
           path: workouts

@@ -5,7 +5,7 @@ namespace Workouts.API
 {
     public class ExerciseEventStoreTests
     {
-        private readonly ExerciseEventStore dataLayer;
+        private readonly IExerciseEventStore dataLayer;
 
         public ExerciseEventStoreTests()
         {
@@ -43,7 +43,7 @@ namespace Workouts.API
         }
 
         [Fact]
-        public void TestCreateNewExercise()
+        public void TestAddNewEvent()
         {
             var exerciseName = "Shoulder Press";
             var exercises = this.dataLayer.FindExerciseEventsByName(exerciseName);

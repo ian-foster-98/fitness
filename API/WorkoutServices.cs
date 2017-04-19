@@ -3,14 +3,18 @@ using System.Collections.Generic;
 
 namespace Workouts.API
 {
-    public class WorkoutServices
+    public class WorkoutServices : IWorkoutServices
     {
+        private IWorkoutDefinition workoutDefinition;
         private IExerciseEventStore dataLayer;
         private IExerciseViewStore viewStore;
 
         // Constructor. Pass in relevant dependancies.
-        public WorkoutServices(IExerciseEventStore dataLayer, IExerciseViewStore viewStore)
+        public WorkoutServices(IWorkoutDefinition workoutDefinition, 
+            IExerciseEventStore dataLayer, 
+            IExerciseViewStore viewStore)
         {
+            this.workoutDefinition = workoutDefinition;
             this.dataLayer = dataLayer;
             this.viewStore = viewStore;
         }
@@ -22,8 +26,6 @@ namespace Workouts.API
 
         public void SaveExercise(Exercise exercise)
         {
-            // Validate data input.
-
             // Verify exerice name is valid.
 
             // Verify date is valid.
@@ -42,7 +44,7 @@ namespace Workouts.API
             // Calculate next weight
 
             // Set next weight in view store
-            
+
             throw new NotImplementedException();
         }
     }
