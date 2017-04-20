@@ -2,51 +2,65 @@ using System;
 using Amazon.DynamoDBv2.DataModel;
 using Xunit;
 using Workouts.API.Interfaces;
+using Amazon.DynamoDBv2;
+using System.Collections.Generic;
+using Amazon.DynamoDBv2.Model;
 
 namespace Workouts.API.Tests
 {
     public class ExerciseEventStoreTests
     {
+        private readonly string tableName = "Exercise";
+        private readonly AmazonDynamoDBClient client;
         private readonly IExerciseEventStore dataLayer;
 
         public ExerciseEventStoreTests()
         {
-            var dbContext = SetUpDBContext();
-            this.dataLayer = new ExerciseEventStore(dbContext);
+            var clientConfig = new AmazonDynamoDBConfig();
+            clientConfig.ServiceURL = "http://localhost:8000";
+            this.client = new AmazonDynamoDBClient(clientConfig);
+            
+            var dbContext = new DynamoDBContext(client);
+            var config = new DynamoDBOperationConfig();
+            /*
+             * Create table command line
+             * aws dynamodb delete-table --endpoint-url http://localhost:8000 --table-name Exercise
+             * aws dynamodb create-table --endpoint-url http://localhost:8000 --table-name Exercise --attribute-definitions AttributeName=DateOfExercise,AttributeType=S AttributeName=ExerciseName,AttributeType=S --key-schema AttributeName=DateOfExercise,KeyType=HASH AttributeName=ExerciseName,KeyType=RANGE --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5
+             * aws dynamodb batch-write-item --endpoint-url http://localhost:8000 --request-items file://API/Tests/test_items.json
+            */
+
+            this.dataLayer = new ExerciseEventStore(dbContext, config);
         }
 
-        private IDynamoDBContext SetUpDBContext(){
-            return null;
-        }
 
-//        [Fact]
-        public void TestNoExercisesRecorded()
+        [Fact]
+        public async void TestNoExercisesRecorded()
         {
-            var exercises = this.dataLayer.FindExerciseEventsByName("Back Squat");
+            var exercises = await this.dataLayer.FindExerciseEventsByName("Back Squat", 2);
             Assert.Empty(exercises);
         }
 
-//        [Fact]
-        public void TestOneExercise()
+        [Fact]
+        public async void TestOneExercise()
         {
             var exerciseName = "Deadlift";
-            var exercises = this.dataLayer.FindExerciseEventsByName(exerciseName);
+            var exercises = await this.dataLayer.FindExerciseEventsByName(exerciseName, 2);
             Assert.Single(exercises);
             Assert.Equal(exercises[0].ExerciseName, exerciseName);
         }
 
-//        [Fact]
-        public void TestTwoExercises()
+        [Fact]
+        public async void TestTwoExercises()
         {
-            var exercises = this.dataLayer.FindExerciseEventsByName("Lunges");
+            var exercises = await this.dataLayer.FindExerciseEventsByName("Lunges", 2);
             Assert.Equal(exercises.Count, 2);
         }
 
 //        [Fact]
-        public void TestAddNewEvent()
+        public async void TestAddNewEvent()
         {
             var exerciseName = "Shoulder Press";
-            var exercises = this.dataLayer.FindExerciseEventsByName(exerciseName);
+            var exercises = await this.dataLayer.FindExerciseEventsByName(exerciseName, 2);
             Assert.Empty(exercises);
 
             var newExercise = new Exercise()
@@ -58,7 +72,7 @@ namespace Workouts.API.Tests
             };
             this.dataLayer.AddExerciseEvent(newExercise);
 
-            exercises = this.dataLayer.FindExerciseEventsByName(exerciseName);
+            exercises = await this.dataLayer.FindExerciseEventsByName(exerciseName, 2);
             Assert.Single(exercises);
             Assert.Equal(exercises[0].ExerciseName, exerciseName);
         }

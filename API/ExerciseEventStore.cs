@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Amazon.DynamoDBv2.DataModel;
 using Workouts.API.Interfaces;
 
@@ -7,23 +8,32 @@ namespace Workouts.API
 {
     public class ExerciseEventStore : IExerciseEventStore
     {
-        // Reference to the data storage layer.
+        private readonly string tableName = "Exercise";
         private IDynamoDBContext context;
+        private DynamoDBOperationConfig config;
 
-        public ExerciseEventStore(IDynamoDBContext context)
+        public ExerciseEventStore(IDynamoDBContext context, DynamoDBOperationConfig config)
         {
             this.context = context;
+            this.config = config;
         }
 
-        public IList<Exercise> FindExerciseEventsByName(string ExerciseName)
+        public async Task<IList<Exercise>> FindExerciseEventsByName(string exerciseName, int limit)
         {
-            // Check name is valid.
-            throw new NotImplementedException();
+            var search = context.QueryAsync<Exercise>(exerciseName);
+            var exerciseList = new List<Exercise>();
+            do
+            {
+                exerciseList = await search.GetNextSetAsync(default(System.Threading.CancellationToken));
+            } while (!search.IsDone);
+ 
+            return exerciseList;
         }
 
         public void AddExerciseEvent(Exercise exercise)
         {
-            throw new NotImplementedException();
+            var task = context.SaveAsync<Exercise>(exercise);
+            task.Wait();
         }
     }
 }

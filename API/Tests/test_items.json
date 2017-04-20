@@ -1,0 +1,34 @@
+{
+    "Exercise": [
+        {   
+            "PutRequest": {
+                "Item": { 
+                    "ExerciseName": {"S": "Deadlift"},
+                    "DateOfExercise": {"S": "2017/04/20"},
+                    "Weight": {"N": "27.5"},
+                    "Success": {"S": "true"}
+                }
+            }
+        },
+        {   
+            "PutRequest": {
+                "Item": { 
+                    "ExerciseName": {"S": "Lunges"},
+                    "DateOfExercise": {"S": "2017/04/18"},
+                    "Weight": {"N": "25"},
+                    "Success": {"S": "true"}
+                }
+            }
+        },
+        {
+            "PutRequest": {
+                "Item": { 
+                    "ExerciseName": {"S": "Lunges"},
+                    "DateOfExercise": {"S": "2017/04/20"},
+                    "Weight": {"N": "27.5"},
+                    "Success": {"S": "true"}
+                }
+            }
+        }
+    ]
+} 

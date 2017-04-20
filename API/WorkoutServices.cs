@@ -11,7 +11,6 @@ namespace Workouts.API
         private IExerciseEventStore eventStore;
         private IExerciseViewStore viewStore;
 
-        // Constructor. Pass in relevant dependancies.
         public WorkoutServices(IWorkoutDefinition workoutDefinition, 
             IExerciseEventStore eventStore, 
             IExerciseViewStore viewStore)
@@ -23,30 +22,39 @@ namespace Workouts.API
 
         public List<Exercise> GetNextWorkout()
         {
-            throw new NotImplementedException();
+            // Get list of exercises to add to this workout.
+            var exercises = this.workoutDefinition.GetWorkoutDefinition();
+            var result = new List<Exercise>();
+            foreach(var e in exercises)
+            {
+                result.Add(new Exercise() 
+                {
+                    ExerciseName = e,
+                    DateOfExercise = DateTime.Now.Date.ToString(),
+                    Weight = this.viewStore.GetNextWeight(e),
+                    Success = false
+                });
+            }
+            return result;
         }
 
         public void SaveExercise(Exercise exercise)
         {
-            // Verify exercise name is valid.
             if(!workoutDefinition.GetWorkoutDefinition().Contains(exercise.ExerciseName))
             {
                 throw new ExcerciseNotFoundException(String.Format("Exercise {0} is not a valid exercise.", exercise.ExerciseName));
             }
 
-            // Verify date is valid.
             var dateOfExercise = DateTime.Parse(exercise.DateOfExercise);
             if(dateOfExercise > DateTime.Now.Date){
                 throw new ArgumentException(String.Format("Exercise date {0} is invalid. Cannot be later than current date.", exercise.DateOfExercise));
             }
 
-            // Verify weight is valid.
             if(exercise.Weight <= 0)
             {
                 throw new ArgumentException(String.Format("Weight {0} is not a valid weight. Must be greater than zero.", exercise.Weight));
             }
 
-            // Save exercise.
             eventStore.AddExerciseEvent(exercise);
         }
 

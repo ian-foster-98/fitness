@@ -26,6 +26,13 @@ namespace Workouts.API.Tests
         private IExerciseViewStore MockExerciseViewStore()
         {
             var exerciseViewStore = new Mock<IExerciseViewStore>();
+            exerciseViewStore.Setup<double>(x => x.GetNextWeight("Back Squat")).Returns(47.5);
+            exerciseViewStore.Setup<double>(x => x.GetNextWeight("Bench Press")).Returns(40);
+            exerciseViewStore.Setup<double>(x => x.GetNextWeight("Deadlift")).Returns(60);
+            exerciseViewStore.Setup<double>(x => x.GetNextWeight("Bench Dips")).Returns(5);
+            exerciseViewStore.Setup<double>(x => x.GetNextWeight("Lateral Pull-downs")).Returns(45);
+            exerciseViewStore.Setup<double>(x => x.GetNextWeight("Shoulder Press")).Returns(30);
+            exerciseViewStore.Setup<double>(x => x.GetNextWeight("Lunges")).Returns(10);
             return exerciseViewStore.Object;
         }
 
@@ -79,6 +86,14 @@ namespace Workouts.API.Tests
                     Success = true
                 }
             ));
+        }
+
+        [Fact]
+        public void TestGetNextWorkout()
+        {
+            var workout = this.workoutServices.GetNextWorkout();
+            Assert.Equal(7, workout.Count);
+            Assert.Equal(40, workout[1].Weight);
         }
     }
 }
