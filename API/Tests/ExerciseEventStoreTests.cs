@@ -3,8 +3,6 @@ using Amazon.DynamoDBv2.DataModel;
 using Xunit;
 using Workouts.API.Interfaces;
 using Amazon.DynamoDBv2;
-using System.Collections.Generic;
-using Amazon.DynamoDBv2.Model;
 
 namespace Workouts.API.Tests
 {
@@ -17,7 +15,7 @@ namespace Workouts.API.Tests
         public ExerciseEventStoreTests()
         {
             var clientConfig = new AmazonDynamoDBConfig();
-            clientConfig.ServiceURL = "http://localhost:8000";
+//            clientConfig.ServiceURL = "http://localhost:8000";
             this.client = new AmazonDynamoDBClient(clientConfig);
             
             var dbContext = new DynamoDBContext(client);
@@ -56,7 +54,7 @@ namespace Workouts.API.Tests
             Assert.Equal(exercises.Count, 2);
         }
 
-//        [Fact]
+        [Fact]
         public async void TestAddNewEvent()
         {
             var exerciseName = "Shoulder Press";

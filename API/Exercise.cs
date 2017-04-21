@@ -6,10 +6,10 @@ namespace Workouts.API
     public class Exercise
     {
         [DynamoDBHashKey]   
-        public string DateOfExercise { get; set; }
+        public string ExerciseName{ get; set; }
 
         [DynamoDBRangeKey]
-        public string ExerciseName{ get; set; }
+        public string DateOfExercise { get; set; }
 
         public double Weight { get; set; }
 

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2.DataModel;
@@ -20,7 +19,8 @@ namespace Workouts.API
 
         public async Task<IList<Exercise>> FindExerciseEventsByName(string exerciseName, int limit)
         {
-            var search = context.QueryAsync<Exercise>(exerciseName);
+            this.config.BackwardQuery = true;
+            var search = context.QueryAsync<Exercise>(exerciseName, this.config);
             var exerciseList = new List<Exercise>();
             do
             {

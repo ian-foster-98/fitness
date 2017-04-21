@@ -3,8 +3,8 @@
         {   
             "PutRequest": {
                 "Item": { 
-                    "ExerciseName": {"S": "Deadlift"},
                     "DateOfExercise": {"S": "2017/04/20"},
+                    "ExerciseName": {"S": "Deadlift"},
                     "Weight": {"N": "27.5"},
                     "Success": {"S": "true"}
                 }
@@ -13,8 +13,8 @@
         {   
             "PutRequest": {
                 "Item": { 
-                    "ExerciseName": {"S": "Lunges"},
                     "DateOfExercise": {"S": "2017/04/18"},
+                    "ExerciseName": {"S": "Lunges"},
                     "Weight": {"N": "25"},
                     "Success": {"S": "true"}
                 }
@@ -23,8 +23,8 @@
         {
             "PutRequest": {
                 "Item": { 
-                    "ExerciseName": {"S": "Lunges"},
                     "DateOfExercise": {"S": "2017/04/20"},
+                    "ExerciseName": {"S": "Lunges"},
                     "Weight": {"N": "27.5"},
                     "Success": {"S": "true"}
                 }
