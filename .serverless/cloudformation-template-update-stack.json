@@ -17,6 +17,12 @@
         "LogGroupName": "/aws/lambda/workouts-dev-saveexercise"
       }
     },
+    "ProjectexerciseLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/workouts-dev-projectexercise"
+      }
+    },
     "IamRoleLambdaExecution": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -62,6 +68,9 @@
                     },
                     {
                       "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/workouts-dev-saveexercise:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/workouts-dev-projectexercise:*"
                     }
                   ]
                 },
@@ -76,7 +85,25 @@
                     },
                     {
                       "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/workouts-dev-saveexercise:*:*"
+                    },
+                    {
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/workouts-dev-projectexercise:*:*"
                     }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:Query",
+                    "dynamodb:Scan",
+                    "dynamodb:GetItem",
+                    "dynamodb:PutItem",
+                    "dynamodb:UpdateItem",
+                    "dynamodb:DeleteItem"
+                  ],
+                  "Resource": [
+                    "arn:aws:dynamodb:ap-southeast-2:*:table/workouts-dev-event-store",
+                    "arn:aws:dynamodb:ap-southeast-2:*:table/workouts-dev-view-store"
                   ]
                 }
               ]
@@ -104,7 +131,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/workouts/dev/1492503669490-2017-04-18T08:21:09.490Z/deploy-package.zip"
+          "S3Key": "serverless/workouts/dev/1492829189938-2017-04-22T02:46:29.938Z/deploy-package.zip"
         },
         "FunctionName": "workouts-dev-getnextworkout",
         "Handler": "CsharpHandlers::Workouts.Workouts::GetNextWorkout",
@@ -116,21 +143,27 @@
           ]
         },
         "Runtime": "dotnetcore1.0",
-        "Timeout": 6
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "EVENT_STORE_TABLE": "workouts-dev-event-store",
+            "VIEW_STORE_TABLE": "workouts-dev-view-store"
+          }
+        }
       },
       "DependsOn": [
         "GetnextworkoutLogGroup",
         "IamRoleLambdaExecution"
       ]
     },
-    "GetnextworkoutLambdaVersion5CeSyHZsB7qyEprypnjDbfjqG7fghzyvGqn1A2pI1n4": {
+    "GetnextworkoutLambdaVersionJ5lzm2c6CsoOctXzJmYbiiwPtcDPqSjRulmPrUBaA": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "GetnextworkoutLambdaFunction"
         },
-        "CodeSha256": "5CeSyHZsB7qyEprypnjDbfjqG7fghzyvGqn1A2pI1n4="
+        "CodeSha256": "J5l/zm+2c6CsoOctXzJmYbiiwPtcDPqSjRulmPrUBaA="
       }
     },
     "SaveexerciseLambdaFunction": {
@@ -140,7 +173,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/workouts/dev/1492503669490-2017-04-18T08:21:09.490Z/deploy-package.zip"
+          "S3Key": "serverless/workouts/dev/1492829189938-2017-04-22T02:46:29.938Z/deploy-package.zip"
         },
         "FunctionName": "workouts-dev-saveexercise",
         "Handler": "CsharpHandlers::Workouts.Workouts::SaveExercise",
@@ -152,21 +185,69 @@
           ]
         },
         "Runtime": "dotnetcore1.0",
-        "Timeout": 6
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "EVENT_STORE_TABLE": "workouts-dev-event-store",
+            "VIEW_STORE_TABLE": "workouts-dev-view-store"
+          }
+        }
       },
       "DependsOn": [
         "SaveexerciseLogGroup",
         "IamRoleLambdaExecution"
       ]
     },
-    "SaveexerciseLambdaVersion5CeSyHZsB7qyEprypnjDbfjqG7fghzyvGqn1A2pI1n4": {
+    "SaveexerciseLambdaVersionJ5lzm2c6CsoOctXzJmYbiiwPtcDPqSjRulmPrUBaA": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "SaveexerciseLambdaFunction"
         },
-        "CodeSha256": "5CeSyHZsB7qyEprypnjDbfjqG7fghzyvGqn1A2pI1n4="
+        "CodeSha256": "J5l/zm+2c6CsoOctXzJmYbiiwPtcDPqSjRulmPrUBaA="
+      }
+    },
+    "ProjectexerciseLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/workouts/dev/1492829189938-2017-04-22T02:46:29.938Z/deploy-package.zip"
+        },
+        "FunctionName": "workouts-dev-projectexercise",
+        "Handler": "CsharpHandlers::Workouts.Workouts::ProjectExercise",
+        "MemorySize": 1024,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        },
+        "Runtime": "dotnetcore1.0",
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "EVENT_STORE_TABLE": "workouts-dev-event-store",
+            "VIEW_STORE_TABLE": "workouts-dev-view-store"
+          }
+        }
+      },
+      "DependsOn": [
+        "ProjectexerciseLogGroup",
+        "IamRoleLambdaExecution"
+      ]
+    },
+    "ProjectexerciseLambdaVersionJ5lzm2c6CsoOctXzJmYbiiwPtcDPqSjRulmPrUBaA": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ProjectexerciseLambdaFunction"
+        },
+        "CodeSha256": "J5l/zm+2c6CsoOctXzJmYbiiwPtcDPqSjRulmPrUBaA="
       }
     },
     "ApiGatewayRestApi": {
@@ -312,7 +393,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1492503669624": {
+    "ApiGatewayDeployment1492829190061": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -390,6 +471,60 @@
           ]
         }
       }
+    },
+    "EventStoreDynamoDbTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "ExerciseName",
+            "AttributeType": "S"
+          },
+          {
+            "AttributeName": "DateOfExercise",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "ExerciseName",
+            "KeyType": "HASH"
+          },
+          {
+            "AttributeName": "DateOfExercise",
+            "KeyType": "RANGE"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 1,
+          "WriteCapacityUnits": 1
+        },
+        "TableName": "workouts-dev-event-store"
+      }
+    },
+    "ViewStoreDynamoDbTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "ExerciseName",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "ExerciseName",
+            "KeyType": "HASH"
+          }
+        ],
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 1,
+          "WriteCapacityUnits": 1
+        },
+        "TableName": "workouts-dev-view-store"
+      }
     }
   },
   "Outputs": {
@@ -401,13 +536,19 @@
     "GetnextworkoutLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "GetnextworkoutLambdaVersion5CeSyHZsB7qyEprypnjDbfjqG7fghzyvGqn1A2pI1n4"
+        "Ref": "GetnextworkoutLambdaVersionJ5lzm2c6CsoOctXzJmYbiiwPtcDPqSjRulmPrUBaA"
       }
     },
     "SaveexerciseLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "SaveexerciseLambdaVersion5CeSyHZsB7qyEprypnjDbfjqG7fghzyvGqn1A2pI1n4"
+        "Ref": "SaveexerciseLambdaVersionJ5lzm2c6CsoOctXzJmYbiiwPtcDPqSjRulmPrUBaA"
+      }
+    },
+    "ProjectexerciseLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "ProjectexerciseLambdaVersionJ5lzm2c6CsoOctXzJmYbiiwPtcDPqSjRulmPrUBaA"
       }
     },
     "ServiceEndpoint": {

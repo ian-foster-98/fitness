@@ -2,7 +2,23 @@ service: workouts
 
 provider:
   name: aws
+  stage: dev
   runtime: dotnetcore1.0
+  environment:
+    EVENT_STORE_TABLE: ${self:service}-${opt:stage, self:provider.stage}-event-store
+    VIEW_STORE_TABLE: ${self:service}-${opt:stage, self:provider.stage}-view-store
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: 
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.EVENT_STORE_TABLE}"
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.VIEW_STORE_TABLE}"
 
 package:
   artifact: bin/release/netcoreapp1.0/publish/deploy-package.zip
@@ -22,4 +38,53 @@ functions:
           path: workouts
           method: post
           cors: true
+  projectexercise:
+    handler: CsharpHandlers::Workouts.Workouts::ProjectExercise
+    events:
+      - stream:
+        type: dynamodb
+        arn:
+          Fn::GetAtt:
+            - EventStoreDynamoDbTable
+            - StreamArn
 
+resources:
+  Resources:
+    EventStoreDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: ExerciseName
+            AttributeType: S
+          -
+            AttributeName: DateOfExercise
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: ExerciseName
+            KeyType: HASH
+          -
+            AttributeName: DateOfExercise
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.EVENT_STORE_TABLE}
+    ViewStoreDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: ExerciseName
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: ExerciseName
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.VIEW_STORE_TABLE}

@@ -15,10 +15,8 @@ namespace Workouts.API.Tests
         {
             var clientConfig = new AmazonDynamoDBConfig();
             this.client = new AmazonDynamoDBClient(clientConfig);
-            
             var dbContext = new DynamoDBContext(client);
             var config = new DynamoDBOperationConfig();
-
             this.eventStore = new ExerciseEventStore(dbContext, config);
         }
 
