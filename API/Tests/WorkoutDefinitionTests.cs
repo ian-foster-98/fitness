@@ -1,6 +1,7 @@
 using Xunit;
 using Workouts.API.Exceptions;
 using Workouts.API.Interfaces;
+using System;
 
 namespace Workouts.API.Tests
 {
@@ -13,7 +14,7 @@ namespace Workouts.API.Tests
             this.workoutDefinition = new WorkoutDefinition();
         }
 
-//        [Fact]
+        [Fact]
         public void TestGetWorkoutDefinition()
         {
             var workout = this.workoutDefinition.GetWorkoutDefinition();
@@ -21,62 +22,60 @@ namespace Workouts.API.Tests
             Assert.Equal("Back Squat", workout[0]);
         }
 
-//        [Fact]
-        public void TestNextWeightNegative()
+        [Fact]
+        public void TestProjectExerciseNoPrevious()
         {
-            Assert.Throws<InvalidWeightException>(() => this.workoutDefinition.GetNextWeight("", -1));
+            var exercise = new Exercise() {
+                ExerciseName =  "Bench Dips",
+                DateOfExercise = DateTime.Now.Date.ToString(),
+                Weight = 5,
+                Success = true
+            };
+
+            var nextWeight = this.workoutDefinition.GetNextWeight(exercise, null);
+            Assert.Equal(5, nextWeight);
         }
 
-//        [Fact]
-        public void TestZeroInput()
+        [Fact]
+        public void TestProjectExerciseDifferentPrevious()
         {
-            Assert.Throws<InvalidWeightException>(() => this.workoutDefinition.GetNextWeight("", 0));
+            var exercise = new Exercise() {
+                ExerciseName =  "Deadlift",
+                DateOfExercise = DateTime.Now.Date.ToString(),
+                Weight = 30,
+                Success = true
+            };
+
+            var previousExercise = new Exercise() {
+                ExerciseName =  "Deadlift",
+                DateOfExercise = DateTime.Now.Date.AddDays(-2).ToString(),
+                Weight = 27.5,
+                Success = true
+            };
+
+            var nextWeight = this.workoutDefinition.GetNextWeight(exercise, previousExercise);
+            Assert.Equal(30, nextWeight);
         }
 
-//        [Fact]
-        public void TestInvalidExerciseName()
+        [Fact]
+        public void TestProjectExerciseSamePrevious()
         {
-            Assert.Throws<ExcerciseNotFoundException>(() => this.workoutDefinition.GetNextWeight("", 0));
-        }
+            var exercise = new Exercise() {
+                ExerciseName =  "Lunges",
+                DateOfExercise = DateTime.Now.Date.ToString(),
+                Weight = 27.5,
+                Success = true
+            };
 
-//        [Fact]
-        public void TestInvalidWeightTwo()
-        {
-            Assert.Throws<ExcerciseNotFoundException>(() => this.workoutDefinition.GetNextWeight("", 3));
-        }
+            var previousExercise = new Exercise() {
+                ExerciseName =  "Lunges",
+                DateOfExercise = DateTime.Now.Date.AddDays(-2).ToString(),
+                Weight = 27.5,
+                Success = true
+            };
 
-//        [Fact]
-        public void TestInvalidWeightFive() 
-        {
-            Assert.Throws<ExcerciseNotFoundException>(() => this.workoutDefinition.GetNextWeight("", 4));
-        }
-
-//        [Fact]
-        public void TestInputWithCeiling()
-        {
-            var nextWeight = this.workoutDefinition.GetNextWeight("", 15);
-            Assert.Equal(17.5, nextWeight);
-        }
-
-//        [Fact]
-        public void TestInputUnderCrossover()
-        {
-            var nextWeight = this.workoutDefinition.GetNextWeight("", 40);
-            Assert.Equal(42.5, nextWeight);
-        }
-
-//        [Fact]
-        public void TestInputOverCrossover()
-        {
-            var nextWeight = this.workoutDefinition.GetNextWeight("", 50);
-            Assert.Equal(55, nextWeight);
-        }
-
-//        [Fact]
-        public void TestInputWithFloor()
-        {
-            var nextWeight = this.workoutDefinition.GetNextWeight("", 65);
-            Assert.Equal(70, nextWeight);
+            var nextWeight = this.workoutDefinition.GetNextWeight(exercise, previousExercise);
+            Assert.Equal(30, nextWeight);
         }
     }
 }

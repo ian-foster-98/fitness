@@ -1,4 +1,3 @@
-using System;
 using Amazon.DynamoDBv2.DataModel;
 using Workouts.API.Interfaces;
 
@@ -6,7 +5,6 @@ namespace Workouts.API
 {
     public class ExerciseViewStore : IExerciseViewStore
     {
-        // Reference to the data storage layer.
         private IDynamoDBContext context;
 
         public ExerciseViewStore(IDynamoDBContext context)
@@ -16,12 +14,23 @@ namespace Workouts.API
 
         public void SetNextWeight(string exerciseName, double weight)
         {
-            throw new NotImplementedException();
+            var targetWeight = new TargetWeight() 
+            {
+                ExerciseName = exerciseName,
+                Weight = weight
+            };
+            var saveResult = context.SaveAsync(targetWeight);
+            saveResult.Wait();
         }
 
         public double GetNextWeight(string exerciseName)
         {
-            throw new NotImplementedException();
+            var item = context.LoadAsync<TargetWeight>(exerciseName);
+            item.Wait();
+            if(item.Result == null){
+                return 0.0;
+            }
+            return item.Result.Weight;
         }
     }
 }

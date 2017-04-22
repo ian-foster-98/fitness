@@ -8,6 +8,6 @@ namespace Workouts.API.Interfaces
 
         void SaveExercise(Exercise exercise);
 
-        void ProjectExercise(Exercise exercise);
+        double ProjectExercise(Exercise exercise);
     }
 }

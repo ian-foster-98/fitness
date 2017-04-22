@@ -58,15 +58,24 @@ namespace Workouts.API
             eventStore.AddExerciseEvent(exercise);
         }
 
-        public void ProjectExercise(Exercise exercise)
+        public double ProjectExercise(Exercise exercise)
         {
-            // Get last two exercises with this name
+            Exercise lastExercise = null;
+            var previousExercises = this.eventStore.FindExerciseEventsByName(exercise.ExerciseName, 2);
 
-            // Calculate next weight
+            if(previousExercises.Count > 1)
+            {
+                lastExercise = previousExercises[1];
+            } 
+            else 
+            {
+                lastExercise = exercise;
+            }
 
-            // Set next weight in view store
+            var nextWeight = this.workoutDefinition.GetNextWeight(exercise, lastExercise);
+            this.viewStore.SetNextWeight(exercise.ExerciseName, nextWeight);
 
-            throw new NotImplementedException();
+            return nextWeight;
         }
     }
 }
