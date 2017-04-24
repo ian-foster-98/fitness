@@ -5,17 +5,25 @@ provider:
   stage: dev
   runtime: dotnetcore1.0
   environment:
-    EVENT_STORE_TABLE: ${self:service}-${opt:stage, self:provider.stage}-event-store
-    VIEW_STORE_TABLE: ${self:service}-${opt:stage, self:provider.stage}-view-store
+#    EVENT_STORE_TABLE: ${self:service}-${opt:stage, self:provider.stage}-event-store
+#    VIEW_STORE_TABLE: ${self:service}-${opt:stage, self:provider.stage}-view-store
+    EVENT_STORE_TABLE: Exercise
+    VIEW_STORE_TABLE: TargetWeight
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
+        - dynamodb:*
+#        - dynamodb:DescribeTable
+#        - dynamodb:Query
+#        - dynamodb:Scan
+#        - dynamodb:GetItem
+#        - dynamodb:PutItem
+#        - dynamodb:UpdateItem
+#        - dynamodb:DeleteItem
+#        - dynamodb:GetRecords,
+#        - dynamodb:GetShardIterator,
+#        - dynamodb:DescribeStream,
+#        - dynamodb:ListStreams        
       Resource: 
         - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.EVENT_STORE_TABLE}"
         - "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.VIEW_STORE_TABLE}"
@@ -25,21 +33,21 @@ package:
 
 functions:
   getnextworkout:
-    handler: CsharpHandlers::Workouts.Workouts::GetNextWorkout
+    handler: CsharpHandlers::Workouts.API.Workouts::GetNextWorkout
     events:
       - http:
           path: workouts
           method: get
           cors: true
   saveexercise:
-    handler: CsharpHandlers::Workouts.Workouts::SaveExercise
+    handler: CsharpHandlers::Workouts.API.Workouts::SaveExercise
     events:
       - http:
           path: workouts
           method: post
           cors: true
   projectexercise:
-    handler: CsharpHandlers::Workouts.Workouts::ProjectExercise
+    handler: CsharpHandlers::Workouts.API.Workouts::ProjectExercise
     events:
       - stream:
         type: dynamodb
@@ -52,7 +60,6 @@ resources:
   Resources:
     EventStoreDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
       Properties:
         AttributeDefinitions:
           -
@@ -71,10 +78,11 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+        StreamSpecification:
+          StreamViewType: NEW_AND_OLD_IMAGES
         TableName: ${self:provider.environment.EVENT_STORE_TABLE}
     ViewStoreDynamoDbTable:
       Type: 'AWS::DynamoDB::Table'
-      DeletionPolicy: Retain
       Properties:
         AttributeDefinitions:
           -
